@@ -1,0 +1,191 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column; /* stack heading on top of envelope */
+  justify-content: center; /* vertical center */
+  align-items: center; /* horizontal center */
+  background: #0d305e;
+  font-family: system-ui, sans-serif;
+  padding: 20px; /* prevent edge touch on mobile */
+  gap: 20px;
+}
+
+.container {
+  perspective: 1000px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* horizontal center */
+  justify-content: center; /* vertical center inside container */
+  gap: 20px; /* space between envelope and text */
+  width: 100%;
+  max-width: 400px;
+}
+
+.envelope {
+  width: 260px; /* default for desktop */
+  max-width: 90vw; /* never more than 90% of viewport width */
+  height: 160px;
+  position: relative;
+  background: #0d305e;
+  border-radius: 0 0 12px 12px;
+  cursor: pointer;
+  transform-style: preserve-3d;
+}
+
+/* On phones: make envelope 90% width and keep aspect ratio */
+@media (max-width: 576px) {
+  .envelope {
+    width: 90vw; /* 90% of screen width */
+    height: calc(90vw * 0.62); /* roughly same proportion as 260x160 */
+  }
+}
+
+/* Letter inside */
+.letter {
+  position: absolute;
+  left: 10%;
+  bottom: 0;
+  width: 80%;
+  height: 80%;
+  background: #ffffff;
+  border-radius: 6px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.6s ease;
+  transform: translateY(40px);
+  z-index: 1;
+}
+
+/* Sides of envelope */
+.left-side,
+.right-side {
+  position: absolute;
+  inset: 0;
+  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.4));
+  z-index: 2;
+}
+
+.left-side::before,
+.right-side::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 0 0 12px 12px;
+}
+
+.left-side::before {
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+  background: #0b2a66;
+}
+
+.right-side::before {
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  background: #1d3c7b;
+}
+
+/* Top flap */
+.top-flap {
+  position: absolute;
+  inset: 0 0 50% 0;
+  transform-origin: top;
+  transform: rotateX(0deg);
+  transition: transform 0.6s ease;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.6));
+  z-index: 3;
+}
+
+.top-flap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(0 0, 100% 0, 50% 100%, 0 0);
+  background: #011e43;
+  border-radius: 12px 12px 0 0;
+}
+
+/* Open state */
+.envelope.open .top-flap {
+  transform: rotateX(190deg);
+  filter: none;
+}
+
+.envelope.open .letter {
+  transform: translateY(-30px);
+}
+
+#congrats-heading {
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 130px;
+  font-size: 2.5rem;
+}
+
+/* hidden by default */
+.hidden-heading {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* visible state */
+.show-heading {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.resub-text {
+  color: #fffd74;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 20px;
+  line-height: 1.3;
+  font-weight: 400;
+}
+
+.hidden-text {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.show-text {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 576px) {
+  .resub-text {
+    font-size: 0.8rem;
+    margin-top: 15px;
+  }
+}
+
+.teaser-text {
+  color: #fffd74; /* butter yellow */
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* show/hide classes */
+.show-teaser {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.hidden-teaser {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
